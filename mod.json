@@ -1,0 +1,24 @@
+{
+	"geode": "4.2.0",
+	"gd": {
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074"
+	},
+	"id": "nwo5.smart_startpos",
+	"name": "Smart Startpos",
+	"version": "v1.0.0",
+	"developer": "Nwo5",
+	"description": "Simple smart startpos mod.",
+	"tags": ["editor", "enhancement", "offline"],
+	"links": {
+		"source": "https://github.com/Nwo5-trg/Smart-Startpos"
+	},
+	"dependencies": [
+        {
+            "id": "blueblock6.cleanstartpos",
+            "version": ">=v1.3.1",
+            "importance": "recommended"
+        }
+    ]
+}
