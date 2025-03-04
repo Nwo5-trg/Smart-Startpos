@@ -123,20 +123,23 @@ class $modify(LevelEditor, LevelEditorLayer) {
 
     CCArray* getAllObjectsFromSelectAll() {
         auto editUI = EditorUI::get();
-        auto pauseLayer = EditorPauseLayer::create(this);
+        editUI->onPause(nullptr);
+        auto pauseLayer = this->getChildByType<EditorPauseLayer>(0);
         auto originalObjs = editUI->getSelectedObjects();
         auto toggler = pauseLayer->getChildByType<CCMenu>(4)->getChildByType<CCMenuItemToggler>(9);
+        if (!toggler || !originalObjs || !pauseLayer || !editUI) return nullptr;
         bool isToggled = toggler->isToggled();
         if (isToggled) toggler->activate();
         pauseLayer->getChildByType<CCMenu>(2)->getChildByType<CCMenuItemSpriteExtra>(4)->activate();
         if (isToggled) toggler->activate();
-        pauseLayer->removeMeAndCleanup();
+        pauseLayer->getChildByType<CCMenu>(0)->getChildByType<CCMenuItemSpriteExtra>(0)->activate();
         auto objs = editUI->getSelectedObjects();
         editUI->deselectAll();
         editUI->selectObjects(originalObjs, true);
         editUI->updateObjectInfoLabel();
         editUI->updateButtons();
         editUI->updateDeleteButtons();
+        if (!objs) return nullptr;
         return objs;
     }
     
