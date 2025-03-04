@@ -7,7 +7,7 @@
 	},
 	"id": "nwo5.smart_startpos",
 	"name": "Smart Startpos",
-	"version": "v1.0.0",
+	"version": "v1.1.0",
 	"developer": "Nwo5",
 	"description": "Simple smart startpos mod.",
 	"tags": ["editor", "enhancement", "offline"],
@@ -20,5 +20,53 @@
             "version": ">=v1.3.1",
             "importance": "recommended"
         }
-    ]
+    ],
+	"settings": {
+		"general-title": {
+			"type": "title",
+			"name": "General"
+		},
+		"mode": {
+			"type": "string",
+			"name": "Mode",
+			"description": "On Place sets startpos settings when it's placed. On Playtest sets the settings of *all* startpos objects on playtest.",
+			"default": "On Place",
+			"one-of": ["On Place", "On Playtest"]
+		},
+		"toggles-title": {
+			"type": "title",
+			"name": "Toggles"
+		},
+		"speed-toggle": {
+			"type": "bool",
+			"name": "Set Speed",
+			"default": true
+		},
+		"gamemode-toggle": {
+			"type": "bool",
+			"name": "Set Gamemode",
+			"default": true
+		},
+		"gravity-toggle": {
+			"type": "bool",
+			"name": "Set Gravity",
+			"description": "Gravity logic only checks for portals right now so this is kinda useless.",
+			"default": false
+		},
+		"mirror-toggle": {
+			"type": "bool",
+			"name": "Set Mirror",
+			"default": true
+		},
+		"mini-toggle": {
+			"type": "bool",
+			"name": "Set Mini",
+			"default": true
+		},
+		"dual-toggle": {
+			"type": "bool",
+			"name": "Set Dual",
+			"default": true
+		}
+	}
 }
