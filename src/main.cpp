@@ -26,7 +26,7 @@ CCArray* getAllObjectsFromSelectAll() {
 
 GameObject* getClosestObjectOfType(std::unordered_set<int> ids, GameObject* objectFrom, CCArray* objs) {
     auto distance = INT_MAX;
-    GameObject* closestObject;
+    GameObject* closestObject = nullptr;
 
     for (int i = 0; i < objs->count(); i++) {
         auto obj = static_cast<GameObject*>(objs->objectAtIndex(i));       
