@@ -29,7 +29,6 @@ class $modify(LevelEditor, LevelEditorLayer) {
     }
 
     void setStartPos(CCArray* objs, StartPosObject* startPos) {
-        log::info("setStartPos, {} {}", objs, startPos);
         if (mod->getSettingValue<bool>("speed-toggle")) setSpeed(objs, startPos);
         if (mod->getSettingValue<bool>("gamemode-toggle")) setGamemode(objs, startPos);
         if (mod->getSettingValue<bool>("gravity-toggle")) setFlip(objs, startPos);
@@ -45,7 +44,6 @@ class $modify(LevelEditor, LevelEditorLayer) {
         };
         if (auto obj = getClosestObjectOfType({200, 201, 202, 203, 1334}, startPos, objs)) {
             if (auto entry = map.find(obj->m_objectID); entry != map.end()) startPos->m_startSettings->m_startSpeed = entry->second;
-            log::info("setSpeed, {}, {}", obj, obj->m_objectID);
         }
     }
 
@@ -54,8 +52,11 @@ class $modify(LevelEditor, LevelEditorLayer) {
             {10, false}, {11, true}
         };
         if (auto obj = getClosestObjectOfType({10, 11}, startPos, objs)) {
-            if (auto entry = map.find(obj->m_objectID); entry != map.end()) startPos->m_startSettings->m_isFlipped = entry->second;
-            log::info("setFlip, {}, {}", obj, obj->m_objectID);
+            if (auto entry = map.find(obj->m_objectID); entry != map.end()) {
+                bool flip = entry->second;
+                if (!(getObjectsInbetweenOfType({84, 1022, 1751, 2926}, obj, startPos, objs) % 2 == 0)) flip = flip == true ? false : true;
+                startPos->m_startSettings->m_isFlipped = flip;
+            }
         }
     }
 
@@ -65,7 +66,6 @@ class $modify(LevelEditor, LevelEditorLayer) {
         };
         if (auto obj = getClosestObjectOfType({45, 46}, startPos, objs)) {
             if (auto entry = map.find(obj->m_objectID); entry != map.end()) startPos->m_startSettings->m_mirrorMode = entry->second;
-            log::info("setMirror, {}, {}", obj, obj->m_objectID);
         }
     }
 
@@ -75,7 +75,6 @@ class $modify(LevelEditor, LevelEditorLayer) {
         };
         if (auto obj = getClosestObjectOfType({99, 101}, startPos, objs)) {
             if (auto entry = map.find(obj->m_objectID); entry != map.end()) startPos->m_startSettings->m_startMini = entry->second;
-            log::info("setMini, {}, {}", obj, obj->m_objectID);
         }
     }
 
@@ -86,7 +85,6 @@ class $modify(LevelEditor, LevelEditorLayer) {
         if (auto obj = getClosestObjectOfType({286, 287}, startPos, objs)) {
             if (auto entry = map.find(obj->m_objectID); entry != map.end()) {
                 startPos->m_startSettings->m_startDual = entry->second;
-                log::info("setDual, {}, {}", obj, obj->m_objectID);
                 toggleFreemodeOn(static_cast<EffectGameObject*>(obj), startPos);
             }
         }
@@ -97,11 +95,9 @@ class $modify(LevelEditor, LevelEditorLayer) {
             auto editUI = EditorUI::get();
             editUI->selectObject(startPos, true);
             editUI->m_editObjectBtn->activate();
-            log::info("setFreemodeRun");
             if (auto settingsLayer = CCDirector::sharedDirector()->getRunningScene()->getChildByType<LevelSettingsLayer>(0)) {
                 auto toggler = static_cast<CCMenuItemToggler*>(settingsLayer->getChildByIDRecursive("blueblock6.cleanstartpos/free-mode-toggle"));
                 if (!toggler->isToggled()) toggler->activate();
-                log::info("setFreemode, {}, {}, {}, {}, {}", obj, obj->m_objectID, obj->m_cameraIsFreeMode, toggler, settingsLayer);
                 settingsLayer->getChildByType<CCLayer>(0)->getChildByType<CCMenu>(0)->getChildByType<CCMenuItemSpriteExtra>(0)->activate();
             }
         }
@@ -115,7 +111,6 @@ class $modify(LevelEditor, LevelEditorLayer) {
         if (auto obj = getClosestObjectOfType({12, 13, 47, 111, 660, 745, 1331, 1933}, startPos, objs)) {
             if (auto entry = map.find(obj->m_objectID); entry != map.end()) {
                 startPos->m_startSettings->m_startMode = entry->second;
-                log::info("setGamemode, {}, {}", obj, obj->m_objectID);
                 toggleFreemodeOn(static_cast<EffectGameObject*>(obj), startPos);
             }
         }
@@ -124,18 +119,25 @@ class $modify(LevelEditor, LevelEditorLayer) {
     GameObject* getClosestObjectOfType(std::unordered_set<int> ids, GameObject* objectFrom, CCArray* objs) {
         auto distance = INT_MAX;
         GameObject* closestObject = nullptr;
-        log::info("getClosestObjectOfTypeRun {}, {}, {}", ids, objectFrom, objs);
     
         for (int i = 0; i < objs->count(); i++) {
             auto obj = static_cast<GameObject*>(objs->objectAtIndex(i));       
             if (obj->getPosition().x < objectFrom->getPosition().x && obj->getPosition().x - objectFrom->getPosition().x < 0 
             && std::abs(obj->getPosition().x - objectFrom->getPosition().x) < distance && ids.contains(obj->m_objectID) && !obj->m_isNoTouch) {
-                log::info("closestObjectUpdated");
                 closestObject = obj;
                 distance = std::abs(obj->getPosition().x - objectFrom->getPosition().x);
             }
         }
-        log::info("closestObjectReturn {}", closestObject);
         return closestObject;
+    }
+
+    int getObjectsInbetweenOfType(std::unordered_set<int> ids, GameObject* objectFrom, GameObject* objectTo, CCArray* objs) {
+        int objects = 0;
+        for (int i = 0; i < objs->count(); i++) {
+            auto obj = static_cast<GameObject*>(objs->objectAtIndex(i));  
+            if (obj->getPosition().x < objectTo->getPosition().x && obj->getPosition().x > objectFrom->getPosition().x && ids.contains(obj->m_objectID) && !obj->m_isNoTouch) objects++;
+        }
+        log::error("{}", objects);
+        return objects;
     }
 };

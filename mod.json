@@ -7,7 +7,7 @@
 	},
 	"id": "nwo5.smart_startpos",
 	"name": "Smart Startpos",
-	"version": "v1.1.0",
+	"version": "v1.1.1",
 	"developer": "Nwo5",
 	"description": "Simple smart startpos mod.",
 	"tags": ["editor", "enhancement", "offline"],
@@ -50,7 +50,7 @@
 		"gravity-toggle": {
 			"type": "bool",
 			"name": "Set Gravity",
-			"description": "Gravity logic only checks for portals right now so this is kinda useless.",
+			"description": "Determines gravity strictly based off portals and orbs.",
 			"default": false
 		},
 		"mirror-toggle": {
