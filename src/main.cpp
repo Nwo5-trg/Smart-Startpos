@@ -13,7 +13,8 @@ class $modify(LevelEditor, LevelEditorLayer) {
     GameObject* createObject(int p0, CCPoint p1, bool p2) {
         auto obj = LevelEditorLayer::createObject(p0, p1 ,p2);
         if (mod->getSettingValue<std::string>("mode") == "On Place") {
-            if (auto startPos = dynamic_cast<StartPosObject*>(obj)) setStartPos(getAllObjectsFromSelectAll(), startPos);
+            // if (auto startPos = dynamic_cast<StartPosObject*>(obj)) setStartPos(getAllObjectsFromSelectAll(), startPos);
+            log::error("so atleast this isnt the problem");
         }
         return obj;
     }
