@@ -13,15 +13,14 @@ class $modify(LevelEditor, LevelEditorLayer) {
     GameObject* createObject(int p0, CCPoint p1, bool p2) {
         auto obj = LevelEditorLayer::createObject(p0, p1 ,p2);
         if (mod->getSettingValue<std::string>("mode") == "On Place") {
-            // if (auto startPos = dynamic_cast<StartPosObject*>(obj)) setStartPos(getAllObjectsFromSelectAll(), startPos);
-            (void)getAllObjectsFromSelectAll();
+            if (auto startPos = dynamic_cast<StartPosObject*>(obj)) setStartPos(this->m_objects, startPos);
         }
         return obj;
     }
 
     void onPlaytest() {
         if (mod->getSettingValue<std::string>("mode") == "On Playtest") {
-            auto objs = getAllObjectsFromSelectAll();
+            auto objs = this->m_objects;
             for (int i = 0; i < objs->count(); i++) {
                 if (auto startPos = dynamic_cast<StartPosObject*>(objs->objectAtIndex(i))) setStartPos(objs, startPos);
             }
@@ -120,29 +119,6 @@ class $modify(LevelEditor, LevelEditorLayer) {
                 toggleFreemodeOn(static_cast<EffectGameObject*>(obj), startPos);
             }
         }
-    }
-
-    CCArray* getAllObjectsFromSelectAll() {
-        auto editUI = EditorUI::get();
-        editUI->onPause(nullptr);
-        auto pauseLayer = this->getChildByType<EditorPauseLayer>(0);
-        auto originalObjs = editUI->getSelectedObjects();
-        auto toggler = pauseLayer->getChildByType<CCMenu>(4)->getChildByType<CCMenuItemToggler>(9);
-        if (!toggler || !originalObjs || !pauseLayer || !editUI) return nullptr;
-        bool isToggled = toggler->isToggled();
-        if (isToggled) toggler->activate();
-        return nullptr;
-        // pauseLayer->getChildByType<CCMenu>(2)->getChildByType<CCMenuItemSpriteExtra>(4)->activate();
-        // if (isToggled) toggler->activate();
-        // pauseLayer->getChildByType<CCMenu>(0)->getChildByType<CCMenuItemSpriteExtra>(0)->activate();
-        // auto objs = editUI->getSelectedObjects();
-        // editUI->deselectAll();
-        // editUI->selectObjects(originalObjs, true);
-        // editUI->updateObjectInfoLabel();
-        // editUI->updateButtons();
-        // editUI->updateDeleteButtons();
-        // if (!objs) return nullptr;
-        // return objs;
     }
     
     GameObject* getClosestObjectOfType(std::unordered_set<int> ids, GameObject* objectFrom, CCArray* objs) {
