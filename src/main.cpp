@@ -14,7 +14,7 @@ class $modify(LevelEditor, LevelEditorLayer) {
         auto obj = LevelEditorLayer::createObject(p0, p1 ,p2);
         if (mod->getSettingValue<std::string>("mode") == "On Place") {
             // if (auto startPos = dynamic_cast<StartPosObject*>(obj)) setStartPos(getAllObjectsFromSelectAll(), startPos);
-            log::error("so atleast this isnt the problem");
+            (void)getAllObjectsFromSelectAll();
         }
         return obj;
     }
@@ -131,17 +131,18 @@ class $modify(LevelEditor, LevelEditorLayer) {
         if (!toggler || !originalObjs || !pauseLayer || !editUI) return nullptr;
         bool isToggled = toggler->isToggled();
         if (isToggled) toggler->activate();
-        pauseLayer->getChildByType<CCMenu>(2)->getChildByType<CCMenuItemSpriteExtra>(4)->activate();
-        if (isToggled) toggler->activate();
-        pauseLayer->getChildByType<CCMenu>(0)->getChildByType<CCMenuItemSpriteExtra>(0)->activate();
-        auto objs = editUI->getSelectedObjects();
-        editUI->deselectAll();
-        editUI->selectObjects(originalObjs, true);
-        editUI->updateObjectInfoLabel();
-        editUI->updateButtons();
-        editUI->updateDeleteButtons();
-        if (!objs) return nullptr;
-        return objs;
+        return nullptr;
+        // pauseLayer->getChildByType<CCMenu>(2)->getChildByType<CCMenuItemSpriteExtra>(4)->activate();
+        // if (isToggled) toggler->activate();
+        // pauseLayer->getChildByType<CCMenu>(0)->getChildByType<CCMenuItemSpriteExtra>(0)->activate();
+        // auto objs = editUI->getSelectedObjects();
+        // editUI->deselectAll();
+        // editUI->selectObjects(originalObjs, true);
+        // editUI->updateObjectInfoLabel();
+        // editUI->updateButtons();
+        // editUI->updateDeleteButtons();
+        // if (!objs) return nullptr;
+        // return objs;
     }
     
     GameObject* getClosestObjectOfType(std::unordered_set<int> ids, GameObject* objectFrom, CCArray* objs) {
