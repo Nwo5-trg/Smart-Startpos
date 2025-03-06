@@ -54,10 +54,11 @@ class $modify(LevelEditor, LevelEditorLayer) {
         if (auto obj = getClosestObjectOfType({10, 11}, startPos, objs)) {
             if (auto entry = map.find(obj->m_objectID); entry != map.end()) {
                 bool flip = entry->second;
-                if (!(getObjectsInbetweenOfType({84, 1022, 1751, 2926}, obj, startPos, objs) % 2 == 0)) flip = flip == true ? false : true;
+                if (!(getObjectsInbetweenOfType({84, 1022, 1751, 2926}, obj->getPosition(), startPos->getPosition(), objs) % 2 == 0)) flip = !flip;
                 startPos->m_startSettings->m_isFlipped = flip;
             }
         }
+        else if (!(getObjectsInbetweenOfType({84, 1022, 1751, 2926}, ccp(0, 0), startPos->getPosition(), objs) % 2 == 0)) startPos->m_startSettings->m_isFlipped = true;
     }
 
     void setMirror(CCArray* objs, StartPosObject* startPos) {
@@ -122,8 +123,7 @@ class $modify(LevelEditor, LevelEditorLayer) {
     
         for (int i = 0; i < objs->count(); i++) {
             auto obj = static_cast<GameObject*>(objs->objectAtIndex(i));       
-            if (obj->getPosition().x < objectFrom->getPosition().x && obj->getPosition().x - objectFrom->getPosition().x < 0 
-            && std::abs(obj->getPosition().x - objectFrom->getPosition().x) < distance && ids.contains(obj->m_objectID) && !obj->m_isNoTouch) {
+            if (obj->getPosition().x < (objectFrom->getPosition().x + 15.001) && std::abs(obj->getPosition().x - objectFrom->getPosition().x) < distance && ids.contains(obj->m_objectID) && !obj->m_isNoTouch) {
                 closestObject = obj;
                 distance = std::abs(obj->getPosition().x - objectFrom->getPosition().x);
             }
@@ -131,13 +131,12 @@ class $modify(LevelEditor, LevelEditorLayer) {
         return closestObject;
     }
 
-    int getObjectsInbetweenOfType(std::unordered_set<int> ids, GameObject* objectFrom, GameObject* objectTo, CCArray* objs) {
+    int getObjectsInbetweenOfType(std::unordered_set<int> ids, CCPoint from, CCPoint to, CCArray* objs) {
         int objects = 0;
         for (int i = 0; i < objs->count(); i++) {
             auto obj = static_cast<GameObject*>(objs->objectAtIndex(i));  
-            if (obj->getPosition().x < objectTo->getPosition().x && obj->getPosition().x > objectFrom->getPosition().x && ids.contains(obj->m_objectID) && !obj->m_isNoTouch) objects++;
+            if (obj->getPosition().x < to.x && obj->getPosition().x > from.x && ids.contains(obj->m_objectID) && !obj->m_isNoTouch) objects++;
         }
-        log::error("{}", objects);
         return objects;
     }
 };
